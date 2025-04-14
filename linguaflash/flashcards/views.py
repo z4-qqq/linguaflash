@@ -44,7 +44,6 @@ def create_flashcard(request):
         form = FlashcardForm()
     return render(request, 'flashcards/flashcard_form.html', {'form': form})
 
-# flashcards/views.py
 def study_deck(request, deck_id):
     deck = get_object_or_404(Deck, pk=deck_id)
     flashcards = list(deck.flashcards.all())
@@ -52,12 +51,9 @@ def study_deck(request, deck_id):
     if not flashcards:
         return redirect('deck_list')
     
-    # Get current card index from session or default to 0
     current_index = request.session.get(f'deck_{deck_id}_index', 0)
-    # Get show_answer state from GET parameters or default to False
     show_answer = request.GET.get('show_answer', 'false') == 'true'
     
-    # Handle navigation
     if 'next' in request.GET:
         current_index = (current_index + 1) % len(flashcards)
         show_answer = False
@@ -65,7 +61,6 @@ def study_deck(request, deck_id):
         current_index = (current_index - 1) % len(flashcards)
         show_answer = False
     
-    # Save current index in session
     request.session[f'deck_{deck_id}_index'] = current_index
     
     flashcard = flashcards[current_index]
