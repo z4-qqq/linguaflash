@@ -1,4 +1,6 @@
-# flashcards/admin.py
+"""
+Admin Interface
+"""
 from django.contrib import admin
 from .models import Deck, Flashcard
 
