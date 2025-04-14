@@ -1,0 +1,18 @@
+<!-- flashcards/templates/flashcards/deck_list.html -->
+{% extends "flashcards/base.html" %}
+
+{% block title %}Decks{% endblock %}
+
+{% block content %}
+<h2>Your Decks</h2>
+{% for deck in decks %}
+<div class="card">
+    <h3>{{ deck.title }}</h3>
+    <p>{{ deck.description|default:"No description" }}</p>
+    <p>Cards: {{ deck.flashcards.count }}</p>
+    <a href="{% url 'study_deck' deck.id %}" class="btn">Study</a>
+</div>
+{% empty %}
+<p>No decks available. <a href="{% url 'create_deck' %}">Create one now!</a></p>
+{% endfor %}
+{% endblock %}

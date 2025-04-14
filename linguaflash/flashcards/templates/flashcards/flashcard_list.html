@@ -1,0 +1,32 @@
+<!-- flashcards/templates/flashcards/flashcard_list.html -->
+{% extends "flashcards/base.html" %}
+
+{% block title %}All Flashcards{% endblock %}
+
+{% block content %}
+<h2>All Flashcards</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Deck</th>
+            <th>Front</th>
+            <th>Back</th>
+            <th>Difficulty</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for card in flashcards %}
+        <tr>
+            <td>{{ card.deck.title }}</td>
+            <td>{{ card.front_text }}</td>
+            <td>{{ card.back_text }}</td>
+            <td>{{ card.get_difficulty_display }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No flashcards available. <a href="{% url 'create_flashcard' %}">Create one now!</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

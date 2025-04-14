@@ -1,0 +1,135 @@
+{% extends "flashcards/base.html" %}
+
+{% block title %}Study {{ deck.title }}{% endblock %}
+
+{% block content %}
+<div class="flashcard-container">
+    <h2>Studying: {{ deck.title }}</h2>
+    <div class="progress-bar">
+        <div class="progress" style="width: {{ progress }}%"></div>
+    </div>
+    <p>Card {{ current_index }} of {{ total_cards }}</p>
+    
+    <div class="flashcard {% if show_answer %}flipped{% endif %}" id="flashcard">
+        <div class="flashcard-front">
+            {% if flashcard.image %}
+            <img src="{{ flashcard.image.url }}" alt="Flashcard image">
+            {% endif %}
+            <h3>{{ flashcard.front_text }}</h3>
+            <p><em>Click to flip</em></p>
+        </div>
+        <div class="flashcard-back">
+            <h3>Answer:</h3>
+            <p class="answer-text">{{ flashcard.back_text }}</p>
+            <p class="difficulty">Difficulty: {{ flashcard.get_difficulty_display }}</p>
+            <p><em>Click to flip back</em></p>
+        </div>
+    </div>
+    
+    <div class="study-controls">
+        <a href="?prev=1&show_answer=false" class="btn">Previous</a>
+        <a href="?show_answer={% if not show_answer %}true{% else %}false{% endif %}" 
+           class="btn" 
+           id="show-answer-btn">
+            {% if not show_answer %}Show Answer{% else %}Hide Answer{% endif %}
+        </a>
+        <a href="?next=1&show_answer=false" class="btn">Next</a>
+    </div>
+</div>
+
+<style>
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+    .progress {
+        height: 100%;
+        background-color: #4a6fa5;
+        border-radius: 5px;
+        transition: width 0.3s;
+    }
+    .flashcard {
+        position: relative;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 2rem;
+        min-height: 300px;
+        cursor: pointer;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+    }
+    .flashcard.flipped {
+        transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+        backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .flashcard-back {
+        transform: rotateY(180deg);
+        background: white;
+    }
+    .answer-text {
+        font-size: 1.5rem;
+        margin: 1rem 0;
+        color: #2c3e50;
+    }
+    .difficulty {
+        font-style: italic;
+        color: #7f8c8d;
+    }
+    .study-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const flashcard = document.getElementById('flashcard');
+        const showAnswerBtn = document.getElementById('show-answer-btn');
+        
+        // Flip card on click
+        flashcard.addEventListener('click', function() {
+            const isFlipped = this.classList.contains('flipped');
+            window.location.href = `?show_answer=${!isFlipped}`;
+        });
+        
+        // Update button text based on current state
+        if ({{ show_answer|lower }}) {
+            showAnswerBtn.textContent = 'Hide Answer';
+        } else {
+            showAnswerBtn.textContent = 'Show Answer';
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') {
+                window.location.href = '?next=1&show_answer=false';
+            } else if (e.key === 'ArrowLeft') {
+                window.location.href = '?prev=1&show_answer=false';
+            } else if (e.key === ' ') {
+                const isFlipped = flashcard.classList.contains('flipped');
+                window.location.href = `?show_answer=${!isFlipped}`;
+                e.preventDefault(); // Prevent space from scrolling page
+            }
+        });
+    });
+</script>
+{% endblock %}

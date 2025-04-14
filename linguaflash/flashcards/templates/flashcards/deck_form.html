@@ -1,0 +1,13 @@
+<!-- flashcards/templates/flashcards/deck_form.html -->
+{% extends "flashcards/base.html" %}
+
+{% block title %}Create Deck{% endblock %}
+
+{% block content %}
+<h2>Create New Deck</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn">Save Deck</button>
+</form>
+{% endblock %}
