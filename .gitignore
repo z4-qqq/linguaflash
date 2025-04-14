@@ -1,0 +1,14 @@
+media/*
+
+*.env
+
+*.sqlite3
+__pycache__/
+*.DS_Store
+*.pyc
+*.cache
+cache/
+*.coverage
+*.coverage*-*
+pytest.xml
+venv/
